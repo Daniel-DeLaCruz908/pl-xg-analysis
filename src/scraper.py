@@ -29,21 +29,12 @@ conn = sqlite3.connect('data/epl_2023.db')
 df.to_sql('matches', conn, if_exists='replace', index=False)
 
 cursor = conn.cursor()
-cursor.execute("SELECT team_name, SUM(scored) - SUM(xG) AS performance FROM matches GROUP BY team_name ORDER BY performance DESC")
-rows = cursor.fetchall()
-for row in rows:
-    print(row)
 
-cursor.execute("PRAGMA table_info(matches)")
-for col in cursor.fetchall():
-    print(col)
+season_performance = pd.read_sql_query("SELECT team_name, SUM(scored) - SUM(xG) AS performance FROM matches GROUP BY team_name ORDER BY performance DESC", conn)
+season_performance.to_csv('data/season_performance.csv', index=False)
 
-cursor.execute("SELECT team_name, date, pts, SUM(pts) OVER (PARTITION BY team_name ORDER BY date ROWS BETWEEN 4 PRECEDING AND CURRENT ROW) AS rolling_points FROM matches")
-rolling_points = cursor.fetchall()
-for row in rolling_points:
-    print(row)
+rolling_form = pd.read_sql_query("SELECT team_name, date, pts, SUM(pts) OVER (PARTITION BY team_name ORDER BY date ROWS BETWEEN 4 PRECEDING AND CURRENT ROW) AS rolling_points FROM matches", conn)
+rolling_form.to_csv('data/rolling_form.csv', index=False)
 
-cursor.execute("SELECT team_name, date, scored, xG, scored - xG AS match_performance FROM matches WHERE result = 'l' ORDER by xG DESC")
-match_performance = cursor.fetchall()
-for row in match_performance:
-    print(row)
+high_xg_losses = pd.read_sql_query("SELECT team_name, date, scored, xG, scored - xG AS match_performance FROM matches WHERE result = 'l' ORDER by xG DESC", conn)
+high_xg_losses.to_csv('data/high_xg_losses.csv', index=False)
