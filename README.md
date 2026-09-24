@@ -34,9 +34,11 @@ sits behind Cloudflare bot protection that blocks simple HTTP requests.
 ## How to run it
 
 1. Clone the repo and create a virtual environment:
-    ``` python3 -m venv venv
-    source venv/bin/activate
-    pip install -r requirements.txt ```
+```
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 2. Run the scraper: `python src/scraper.py`
    (this scrapes fresh data, loads it into `data/epl_2023.db`, and exports 
    the analysis CSVs to `data/`)
@@ -44,8 +46,9 @@ sits behind Cloudflare bot protection that blocks simple HTTP requests.
    what each answers
 
 ## Project structure
-
+```
 ├── src/scraper.py # scrape → clean → load → export pipeline
 ├── sql/ # analytical SQL queries, one per question
 ├── data/ # SQLite db + exported CSVs (gitignored: raw .db)
 └── requirements.txt
+```
