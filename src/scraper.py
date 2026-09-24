@@ -30,7 +30,7 @@ df.to_sql('matches', conn, if_exists='replace', index=False)
 
 cursor = conn.cursor()
 
-season_performance = pd.read_sql_query("SELECT team_name, SUM(scored) - SUM(xG) AS performance FROM matches GROUP BY team_name ORDER BY performance DESC", conn)
+season_performance = pd.read_sql_query("SELECT team_name, SUM(scored) - SUM(xG) AS performance, SUM(pts) AS total_points FROM matches GROUP BY team_name ORDER BY performance DESC", conn)
 season_performance.to_csv('data/season_performance.csv', index=False)
 
 rolling_form = pd.read_sql_query("SELECT team_name, date, pts, SUM(pts) OVER (PARTITION BY team_name ORDER BY date ROWS BETWEEN 4 PRECEDING AND CURRENT ROW) AS rolling_points FROM matches", conn)
